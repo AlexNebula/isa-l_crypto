@@ -1,0 +1,30 @@
+name: build-windows-x86_64
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Build ISA-L Crypto (Windows x64)
+        run: |
+          nmake /f Makefile.nmake
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: isal_crypto-win-x86_64
+          path: |
+            isal_crypto.lib
